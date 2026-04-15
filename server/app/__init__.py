@@ -54,6 +54,10 @@ def create_app():
     
     # A simple test route — we'll remove this later
     # Test routes — we'll remove these later
+    from app.routes.auth import auth_bp
+    app.register_blueprint(auth_bp)
+
+
     @app.route('/api/hello')
     def hello():
         return {'message': 'Hello from Flask! Your backend is running.'}
