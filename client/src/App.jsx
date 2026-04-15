@@ -1,85 +1,75 @@
 // client/src/App.jsx
 
 /*
-  Now we're making our first real API call.
-  
-  Key concepts introduced here:
-  
-  1. useState — React's way of storing data that can change.
-     When you call setStatus(...), React re-renders the component 
-     with the new data. This is called "reactivity."
-  
-  2. useEffect — Runs code AFTER the component renders.
-     The empty array [] means "run this once when the component 
-     first appears." Without it, the API call would run on every 
-     single re-render — an infinite loop.
-  
-  3. async/await — Modern way to handle asynchronous operations 
-     (like API calls). The code reads top-to-bottom instead of 
-     being nested in .then().then().then() callbacks.
+  The root component — now with routing and auth.
+
+  BrowserRouter enables client-side routing. Instead of the browser 
+  requesting a new page from the server for every URL, React 
+  intercepts the navigation and swaps components in/out. This is 
+  what makes it a "Single Page Application" (SPA).
+
+  Routes defines ALL the possible URLs in your app.
+  Route maps a URL path to a component.
 */
 
-import { useState, useEffect } from 'react';
-import api from './api/axios';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+import AdminRoute from './components/AdminRoute';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Dashboard from './pages/Dashboard';
+import AdminDashboard from './pages/AdminDashboard';
 
 function App() {
-  // State variables — each one triggers a re-render when updated
-  const [status, setStatus] = useState(null);    // API response data
-  const [loading, setLoading] = useState(true);   // Show loading state
-  const [error, setError] = useState(null);       // Store any errors
-
-  useEffect(() => {
-    // Define an async function inside useEffect
-    // (useEffect itself can't be async — React rule)
-    const checkBackend = async () => {
-      try {
-        const response = await api.get('/status');
-        // api.get('/status') calls http://localhost:5000/api/status
-        // because we set baseURL in axios.js
-        setStatus(response.data);
-        setLoading(false);
-      } catch (err) {
-        // This catches network errors, CORS issues, server down, etc.
-        setError(
-          'Cannot reach the backend. Is Flask running on port 5000?'
-        );
-        setLoading(false);
-        console.error('API Error:', err);
-      }
-    };
-
-    checkBackend();
-  }, []);  // Empty dependency array = run once on mount
-
-  // Conditional rendering — show different UI based on state
-  // This pattern is everywhere in React
-  if (loading) {
-    return <div style={styles.container}><p>Connecting to backend...</p></div>;
-  }
-
-  if (error) {
-    return (
-      <div style={styles.container}>
-        <h1>⚠️ Connection Error</h1>
-        <p style={styles.error}>{error}</p>
-        <p>Make sure you've run <code>python run.py</code> in the server folder.</p>
-      </div>
-    );
-  }
-
   return (
-    <div style={styles.container}>
-      <h1>Assessments Platform</h1>
-      <p>Frontend and backend are connected! 🚀</p>
+    // AuthProvider wraps EVERYTHING so any component in the tree 
+    // can access auth state via useAuth()
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          {/* Public routes — anyone can access */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
-      <div style={styles.statusCard}>
-        <h3>Backend Status</h3>
-        <p><strong>API Status:</strong> {status.status}</p>
-        <p><strong>Database:</strong> {status.database}</p>
-        <p><strong>Users:</strong> {status.users_count}</p>
-        <p><strong>Assessments:</strong> {status.assessments_count}</p>
-      </div>
-    </div>
+          {/* Protected routes — logged-in users only */}
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Admin routes — admin only */}
+          <Route
+            path="/admin/dashboard"
+            element={
+              <AdminRoute>
+                <AdminDashboard />
+              </AdminRoute>
+            }
+          />
+
+          {/* Default redirect
+              If someone goes to /, send them to login.
+              We'll change this to a landing page later. */}
+          <Route path="/" element={<Navigate to="/login" replace />} />
+
+          {/* Catch-all for unknown routes */}
+          <Route
+            path="*"
+            element={
+              <div style={{ textAlign: 'center', marginTop: '50px' }}>
+                <h1>404 — Page Not Found</h1>
+                <p>The page you're looking for doesn't exist.</p>
+              </div>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
