@@ -1,121 +1,113 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+// client/src/App.jsx
+
+/*
+  Now we're making our first real API call.
+  
+  Key concepts introduced here:
+  
+  1. useState — React's way of storing data that can change.
+     When you call setStatus(...), React re-renders the component 
+     with the new data. This is called "reactivity."
+  
+  2. useEffect — Runs code AFTER the component renders.
+     The empty array [] means "run this once when the component 
+     first appears." Without it, the API call would run on every 
+     single re-render — an infinite loop.
+  
+  3. async/await — Modern way to handle asynchronous operations 
+     (like API calls). The code reads top-to-bottom instead of 
+     being nested in .then().then().then() callbacks.
+*/
+
+import { useState, useEffect } from 'react';
+import api from './api/axios';
 
 function App() {
-  const [count, setCount] = useState(0)
+  // State variables — each one triggers a re-render when updated
+  const [status, setStatus] = useState(null);    // API response data
+  const [loading, setLoading] = useState(true);   // Show loading state
+  const [error, setError] = useState(null);       // Store any errors
+
+  useEffect(() => {
+    // Define an async function inside useEffect
+    // (useEffect itself can't be async — React rule)
+    const checkBackend = async () => {
+      try {
+        const response = await api.get('/status');
+        // api.get('/status') calls http://localhost:5000/api/status
+        // because we set baseURL in axios.js
+        setStatus(response.data);
+        setLoading(false);
+      } catch (err) {
+        // This catches network errors, CORS issues, server down, etc.
+        setError(
+          'Cannot reach the backend. Is Flask running on port 5000?'
+        );
+        setLoading(false);
+        console.error('API Error:', err);
+      }
+    };
+
+    checkBackend();
+  }, []);  // Empty dependency array = run once on mount
+
+  // Conditional rendering — show different UI based on state
+  // This pattern is everywhere in React
+  if (loading) {
+    return <div style={styles.container}><p>Connecting to backend...</p></div>;
+  }
+
+  if (error) {
+    return (
+      <div style={styles.container}>
+        <h1>⚠️ Connection Error</h1>
+        <p style={styles.error}>{error}</p>
+        <p>Make sure you've run <code>python run.py</code> in the server folder.</p>
+      </div>
+    );
+  }
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div style={styles.container}>
+      <h1>Assessments Platform</h1>
+      <p>Frontend and backend are connected! 🚀</p>
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      <div style={styles.statusCard}>
+        <h3>Backend Status</h3>
+        <p><strong>API Status:</strong> {status.status}</p>
+        <p><strong>Database:</strong> {status.database}</p>
+        <p><strong>Users:</strong> {status.users_count}</p>
+        <p><strong>Assessments:</strong> {status.assessments_count}</p>
+      </div>
+    </div>
+  );
 }
 
-export default App
+/*
+  Inline styles for now. We'll move to proper CSS (or Tailwind) 
+  in Phase 2 when we build real pages. For a quick test like this, 
+  inline styles keep everything in one file.
+*/
+const styles = {
+  container: {
+    maxWidth: '600px',
+    margin: '50px auto',
+    padding: '20px',
+    fontFamily: 'Arial, sans-serif',
+    textAlign: 'center',
+  },
+  statusCard: {
+    marginTop: '20px',
+    padding: '20px',
+    border: '1px solid #ddd',
+    borderRadius: '8px',
+    backgroundColor: '#f9f9f9',
+    textAlign: 'left',
+  },
+  error: {
+    color: 'red',
+    fontWeight: 'bold',
+  },
+};
+
+export default App;

@@ -6,6 +6,7 @@ from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_mail import Mail
 
+
 # ---------------------------------------------------------------
 # Why are these created OUTSIDE the factory function?
 # 
@@ -52,9 +53,27 @@ def create_app():
     # ---------------------------------------------------------------
     
     # A simple test route — we'll remove this later
+    # Test routes — we'll remove these later
     @app.route('/api/hello')
     def hello():
         return {'message': 'Hello from Flask! Your backend is running.'}
+    
+    @app.route('/api/status')
+    def status():
+        """
+        A more detailed status endpoint. This is useful for:
+        1. Verifying the API is reachable from React
+        2. Confirming the database connection works
+        3. Quick health check during development
+        """
+        from app.models import User, Assessment
+        return {
+            'status': 'online',
+            'database': 'connected',
+            'users_count': User.query.count(),
+            'assessments_count': Assessment.query.count()
+        }
+
     
     # Create database tables
     # ---------------------------------------------------------------
@@ -62,6 +81,9 @@ def create_app():
     # app the database belongs to. Outside of a request (like at 
     # startup), there's no "current app," so we push one manually.
     # ---------------------------------------------------------------
+    # Import models so SQLAlchemy knows about them before creating tables
+    from app.models import User, Assessment, Question, Payment, Attempt, Answer
+
     with app.app_context():
         db.create_all()
     

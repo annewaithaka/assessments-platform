@@ -22,3 +22,24 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Virtual environment
+venv/
+
+# Environment variables
+.env
+
+# Database
+*.db
+
+# Python
+__pycache__/
+*.pyc
+
+# IDE
+.vscode/
+.idea/
+
+# React / Node
+client/node_modules/
+client/dist/
