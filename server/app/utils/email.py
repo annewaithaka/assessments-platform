@@ -24,7 +24,7 @@ def send_reset_email(user_email, reset_url):
     """
     try:
         msg = Message(
-            subject='Password Reset - Assessments Platform',
+            subject='Password Reset - COGNOS',
             sender=current_app.config['MAIL_USERNAME'],
             recipients=[user_email]
         )
@@ -32,7 +32,7 @@ def send_reset_email(user_email, reset_url):
         msg.html = f"""
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
             <h2 style="color: #4f46e5;">Password Reset</h2>
-            <p>You requested a password reset for your Assessments Platform account.</p>
+            <p>You requested a password reset for your Cognos account.</p>
             <p>Click the button below to set a new password. This link expires in 1 hour.</p>
             <a href="{reset_url}" 
                style="display: inline-block; padding: 12px 24px; 
@@ -45,7 +45,7 @@ def send_reset_email(user_email, reset_url):
                 If you didn't request this, ignore this email. Your password won't change.
             </p>
             <hr style="border: none; border-top: 1px solid #ddd; margin: 24px 0;">
-            <p style="color: #999; font-size: 12px;">Assessments Platform</p>
+            <p style="color: #999; font-size: 12px;">Cognos</p>
         </div>
         """
         

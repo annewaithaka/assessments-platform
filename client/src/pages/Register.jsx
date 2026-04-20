@@ -57,7 +57,7 @@ function Register() {
     <div style={styles.container}>
       <div style={styles.card}>
         <h2 style={styles.title}>Create an Account</h2>
-        <p style={styles.subtitle}>Join the Assessments Platform</p>
+        <p style={styles.subtitle}>Join Cognos</p>
 
         {error && <div style={styles.error}>{error}</div>}
 

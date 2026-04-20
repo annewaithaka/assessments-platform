@@ -53,7 +53,7 @@ function Login() {
     <div style={styles.container}>
       <div style={styles.card}>
         <h2 style={styles.title}>Log In</h2>
-        <p style={styles.subtitle}>Welcome back to Assessments Platform</p>
+        <p style={styles.subtitle}>Welcome back to Cognos </p>
 
         {successMessage && <div style={styles.success}>{successMessage}</div>}
         {error && <div style={styles.error}>{error}</div>}

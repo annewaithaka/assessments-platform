@@ -102,7 +102,7 @@ function Certificate() {
         {/* Certificate Preview */}
         <div style={styles.preview}>
           <div style={styles.previewInner}>
-            <p style={styles.previewOrg}>ASSESSMENTS PLATFORM</p>
+            <p style={styles.previewOrg}>COGNOS</p>
             <h2 style={styles.previewTitle}>Certificate of Completion</h2>
             <div style={styles.divider} />
             <p style={styles.previewLabel}>This certifies that</p>

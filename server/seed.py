@@ -42,7 +42,7 @@ def seed_admin():
         # IMPORTANT: Change these credentials before deploying!
         admin = User(
             name='Admin',
-            email='admin@assessments.com',
+            email='admin@cognos.com',
             role='admin'
         )
         admin.set_password('admin123456')  # Change this!
