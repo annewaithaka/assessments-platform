@@ -107,6 +107,7 @@ function AssessmentManager() {
       mcq: 'Multiple Choice',
       true_false: 'True / False',
       short_answer: 'Short Answer',
+      likert: 'Behavioral / Likert',
     };
     return labels[type] || type;
   };
@@ -117,6 +118,7 @@ function AssessmentManager() {
       mcq: { bg: '#ede9fe', text: '#7c3aed' },
       true_false: { bg: '#dbeafe', text: '#2563eb' },
       short_answer: { bg: '#fef3c7', text: '#d97706' },
+      likert: { bg: '#fce7f3', text: '#db2777' },
     };
     return colors[type] || { bg: '#f3f4f6', text: '#6b7280' };
   };
@@ -301,6 +303,13 @@ function AssessmentManager() {
                     {question.question_type === 'short_answer' && (
                       <p style={styles.answerDisplay}>
                         Expected answer: <strong>{question.correct_answer}</strong>
+                      </p>
+                    )}
+
+                    {/* Likert — no correct answer */}
+                    {question.question_type === 'likert' && (
+                      <p style={{ ...styles.answerDisplay, color: '#7c3aed', fontStyle: 'italic' }}>
+                        Behavioral question — no correct answer (not graded)
                       </p>
                     )}
                   </div>

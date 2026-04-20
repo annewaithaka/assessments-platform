@@ -61,5 +61,5 @@ class Question(db.Model):
             'order': self.order
         }
         if include_answer:
-            data['correct_answer'] = self.correct_answer
+            data['correct_answer'] = self.correct_answer if self.question_type != 'likert' else 'N/A'
         return data

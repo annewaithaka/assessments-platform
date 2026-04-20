@@ -282,6 +282,7 @@ function TakeAssessment() {
             {currentQuestion.question_type === 'mcq' && 'Multiple Choice'}
             {currentQuestion.question_type === 'true_false' && 'True / False'}
             {currentQuestion.question_type === 'short_answer' && 'Short Answer'}
+            {currentQuestion.question_type === 'likert' && 'Behavioral'}
           </span>
           <span style={styles.pointsBadge}>
             {currentQuestion.points} {currentQuestion.points === 1 ? 'point' : 'points'}
@@ -349,6 +350,60 @@ function TakeAssessment() {
                   }}
                 >
                   {value === 'true' ? 'True' : 'False'}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Likert Scale */}
+          {currentQuestion.question_type === 'likert' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {currentQuestion.options.map((option, i) => (
+                <button
+                  key={i}
+                  onClick={() => handleAnswer(currentQuestion.id, option)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    padding: '14px 18px',
+                    border: '2px solid',
+                    borderRadius: '10px',
+                    cursor: 'pointer',
+                    fontSize: '16px',
+                    textAlign: 'left',
+                    transition: 'all 0.15s ease',
+                    backgroundColor:
+                      answers[currentQuestion.id] === option
+                        ? '#7c3aed'
+                        : '#fff',
+                    color:
+                      answers[currentQuestion.id] === option
+                        ? '#fff'
+                        : '#333',
+                    borderColor:
+                      answers[currentQuestion.id] === option
+                        ? '#7c3aed'
+                        : '#ddd',
+                  }}
+                >
+                  <span style={{
+                    width: '28px',
+                    height: '28px',
+                    borderRadius: '50%',
+                    backgroundColor: answers[currentQuestion.id] === option
+                      ? 'rgba(255,255,255,0.2)'
+                      : 'rgba(0,0,0,0.04)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '13px',
+                    fontWeight: '700',
+                    flexShrink: 0,
+                  }}>
+                    {i + 1}
+                  </span>
+                  {option}
                 </button>
               ))}
             </div>

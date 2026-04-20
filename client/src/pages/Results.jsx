@@ -111,19 +111,19 @@ function Results() {
         <div style={styles.statsRow}>
           <div style={styles.statItem}>
             <span style={styles.statValue}>
-              {results.filter(r => r.is_correct).length}
+              {results.filter(r => r.is_correct && r.question_type !== 'likert').length}
             </span>
             <span style={styles.statLabel}>Correct</span>
           </div>
           <div style={styles.statItem}>
             <span style={styles.statValue}>
-              {results.filter(r => !r.is_correct && r.user_answer).length}
+              {results.filter(r => !r.is_correct && r.user_answer && r.question_type !== 'likert').length}
             </span>
             <span style={styles.statLabel}>Incorrect</span>
           </div>
           <div style={styles.statItem}>
             <span style={styles.statValue}>
-              {results.filter(r => !r.user_answer).length}
+              {results.filter(r => !r.user_answer && r.question_type !== 'likert').length}
             </span>
             <span style={styles.statLabel}>Skipped</span>
           </div>
@@ -155,11 +155,13 @@ function Results() {
             key={result.question_id}
             style={{
               ...styles.resultCard,
-              borderLeftColor: result.is_correct
-                ? '#16a34a'
-                : result.user_answer
-                  ? '#dc2626'
-                  : '#d97706',
+              borderLeftColor: result.question_type === 'likert'
+                ? '#7c3aed'
+                : result.is_correct
+                  ? '#16a34a'
+                  : result.user_answer
+                    ? '#dc2626'
+                    : '#d97706',
             }}
           >
             <div style={styles.resultHeader}>
@@ -167,23 +169,29 @@ function Results() {
               <span
                 style={{
                   ...styles.resultBadge,
-                  backgroundColor: result.is_correct
-                    ? '#dcfce7'
-                    : result.user_answer
-                      ? '#fef2f2'
-                      : '#fffbeb',
-                  color: result.is_correct
-                    ? '#16a34a'
-                    : result.user_answer
-                      ? '#dc2626'
-                      : '#d97706',
+                  backgroundColor: result.question_type === 'likert'
+                    ? '#ede9fe'
+                    : result.is_correct
+                      ? '#dcfce7'
+                      : result.user_answer
+                        ? '#fef2f2'
+                        : '#fffbeb',
+                  color: result.question_type === 'likert'
+                    ? '#7c3aed'
+                    : result.is_correct
+                      ? '#16a34a'
+                      : result.user_answer
+                        ? '#dc2626'
+                        : '#d97706',
                 }}
               >
-                {result.is_correct
-                  ? `✓ Correct (+${result.points_earned})`
-                  : result.user_answer
-                    ? '✗ Incorrect'
-                    : '— Skipped'}
+                {result.question_type === 'likert'
+                  ? `Response: ${result.user_answer || 'No response'}`
+                  : result.is_correct
+                    ? `✓ Correct (+${result.points_earned})`
+                    : result.user_answer
+                      ? '✗ Incorrect'
+                      : '— Skipped'}
               </span>
             </div>
 
@@ -227,7 +235,7 @@ function Results() {
             )}
 
             {/* True/False and Short Answer results */}
-            {result.question_type !== 'mcq' && (
+            {result.question_type !== 'mcq' && result.question_type !== 'likert' && (
               <div style={styles.answerComparison}>
                 <div style={styles.answerRow}>
                   <span style={styles.answerLabel}>Your answer:</span>
@@ -248,6 +256,29 @@ function Results() {
                     </span>
                   </div>
                 )}
+              </div>
+            )}
+
+            {/* Likert results */}
+            {result.question_type === 'likert' && result.options && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                {result.options.map((opt, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      padding: '6px 10px',
+                      borderRadius: '6px',
+                      border: '1px solid',
+                      fontSize: '13px',
+                      backgroundColor: opt === result.user_answer ? '#ede9fe' : '#f9fafb',
+                      borderColor: opt === result.user_answer ? '#a78bfa' : '#e5e7eb',
+                      color: opt === result.user_answer ? '#7c3aed' : '#6b7280',
+                      fontWeight: opt === result.user_answer ? '600' : '400',
+                    }}
+                  >
+                    {opt === result.user_answer && '● '}{opt}
+                  </div>
+                ))}
               </div>
             )}
           </div>

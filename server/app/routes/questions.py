@@ -91,12 +91,13 @@ def create_question(assessment_id):
     if not question_text:
         return jsonify({'error': 'Question text is required'}), 400
     
-    if question_type not in ['mcq', 'true_false', 'short_answer']:
+    if question_type not in ['mcq', 'true_false', 'short_answer', 'likert']:
         return jsonify({
-            'error': 'Question type must be mcq, true_false, or short_answer'
+            'error': 'Question type must be mcq, true_false, short_answer, or likert'
         }), 400
     
-    if not correct_answer:
+    # Likert questions don't have a correct answer
+    if question_type != 'likert' and not correct_answer:
         return jsonify({'error': 'Correct answer is required'}), 400
     
     # Type-specific validation
@@ -113,6 +114,16 @@ def create_question(assessment_id):
         if correct_answer.lower() not in ['true', 'false']:
             return jsonify({'error': 'True/False answer must be "true" or "false"'}), 400
         correct_answer = correct_answer.lower()
+
+    if question_type == 'likert':
+        correct_answer = 'N/A'  # No correct answer for Likert
+
+    elif question_type == 'likert':
+        # Default Likert scale options if none provided
+        if not data.get('options') or len(data.get('options', [])) < 2:
+            question.set_options(['Never', 'Rarely', 'Sometimes', 'Often', 'Always'])
+        else:
+            question.set_options(data['options'])
     
     # Auto-set the order to be last
     # Count existing questions and add 1
@@ -167,7 +178,7 @@ def update_question(assessment_id, question_id):
         question.question_text = text
     
     if 'question_type' in data:
-        if data['question_type'] not in ['mcq', 'true_false', 'short_answer']:
+        if data['question_type'] not in ['mcq', 'true_false', 'short_answer', 'likert']:
             return jsonify({'error': 'Invalid question type'}), 400
         question.question_type = data['question_type']
     

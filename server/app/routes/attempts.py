@@ -123,8 +123,8 @@ def start_attempt():
     if not questions:
         return jsonify({'error': 'This assessment has no questions'}), 400
     
-    # Calculate max possible score
-    max_score = sum(q.points for q in questions)
+    # Calculate max possible score (exclude Likert — they're not graded)
+    max_score = sum(q.points for q in questions if q.question_type != 'likert')
     
     attempt = Attempt(
         user_id=current_user_id,
@@ -316,6 +316,11 @@ def _grade_and_complete(attempt, status):
     for answer in attempt.answers:
         question = question_map.get(answer.question_id)
         if not question:
+            continue
+        
+        # Likert questions are not graded — they're behavioral
+        if question.question_type == 'likert':
+            answer.is_correct = None  # Not applicable
             continue
         
         # Grade based on question type

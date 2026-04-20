@@ -54,6 +54,12 @@ function QuestionForm({ question, onSubmit, onCancel }) {
     if (newType === 'true_false') {
       setCorrectAnswer('true');
     }
+    if (newType === 'likert') {
+      // Pre-fill with common Likert defaults, but admin can 
+      // add/remove/edit them just like MCQ options
+      setOptions(['Never', 'Rarely', 'Sometimes', 'Often', 'Always']);
+      setCorrectAnswer('N/A');
+    }
   };
 
   // --- MCQ Options Management ---
@@ -104,7 +110,7 @@ function QuestionForm({ question, onSubmit, onCancel }) {
       return;
     }
 
-    if (!correctAnswer.trim()) {
+    if (questionType !== 'likert' && !correctAnswer.trim()) {
       setError('Correct answer is required');
       return;
     }
@@ -127,11 +133,11 @@ function QuestionForm({ question, onSubmit, onCancel }) {
       const payload = {
         question_text: questionText.trim(),
         question_type: questionType,
-        correct_answer: correctAnswer.trim(),
-        points: parseInt(points) || 1,
+        correct_answer: questionType === 'likert' ? 'N/A' : correctAnswer.trim(),
+        points: questionType === 'likert' ? 0 : (parseInt(points) || 1),
       };
 
-      if (questionType === 'mcq') {
+      if (questionType === 'mcq' || questionType === 'likert') {
         payload.options = options.filter(o => o.trim() !== '');
       }
 
@@ -186,6 +192,7 @@ function QuestionForm({ question, onSubmit, onCancel }) {
               <option value="mcq">Multiple Choice</option>
               <option value="true_false">True / False</option>
               <option value="short_answer">Short Answer</option>
+              <option value="likert">Behavioral / Likert Scale</option>
             </select>
             {isEditing && (
               <small style={styles.hint}>Type cannot be changed after creation</small>
@@ -283,6 +290,68 @@ function QuestionForm({ question, onSubmit, onCancel }) {
           </div>
         )}
 
+        {/* --- Likert Scale --- */}
+        {questionType === 'likert' && (
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Scale Options</label>
+            <small style={styles.hint}>
+              Customize the scale labels. You can add, remove, or edit them.
+            </small>
+            {options.map((option, index) => (
+              <div key={index} style={styles.optionRow}>
+                <span style={{
+                  width: '24px',
+                  height: '24px',
+                  borderRadius: '50%',
+                  backgroundColor: '#ede9fe',
+                  color: '#7c3aed',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '12px',
+                  fontWeight: '700',
+                  flexShrink: 0,
+                }}>
+                  {index + 1}
+                </span>
+                <input
+                  type="text"
+                  value={option}
+                  onChange={(e) => updateOption(index, e.target.value)}
+                  style={styles.optionInput}
+                  placeholder={`Option ${index + 1}`}
+                />
+                <button
+                  type="button"
+                  onClick={() => removeOption(index)}
+                  style={styles.removeBtn}
+                  title="Remove option"
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={addOption}
+              style={styles.addOptionBtn}
+            >
+              + Add Option
+            </button>
+            <div style={{
+              marginTop: '8px',
+              padding: '8px 12px',
+              backgroundColor: '#f0fdf4',
+              borderRadius: '6px',
+              border: '1px solid #bbf7d0',
+              fontSize: '12px',
+              color: '#16a34a',
+            }}>
+              This question has no correct answer — it measures behavior/preference and won't affect the score.
+            </div>
+          </div>
+        )}
+      
         {/* --- Short Answer --- */}
         {questionType === 'short_answer' && (
           <div style={styles.formGroup}>
