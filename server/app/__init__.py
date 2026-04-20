@@ -60,6 +60,12 @@ def create_app():
     from app.routes.password_reset import password_reset_bp
     app.register_blueprint(password_reset_bp)
 
+    from app.routes.assessments import assessments_bp
+    app.register_blueprint(assessments_bp)
+    
+    from app.routes.questions import questions_bp
+    app.register_blueprint(questions_bp)
+
     @app.route('/api/hello')
     def hello():
         return {'message': 'Hello from Flask! Your backend is running.'}
