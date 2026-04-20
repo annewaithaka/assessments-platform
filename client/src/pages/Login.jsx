@@ -16,7 +16,7 @@ function Login() {
   // Hooks
   const { login } = useAuth();          // Get the login function from context
   const navigate = useNavigate();        // Programmatic navigation
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     // e.preventDefault() stops the browser's default form behavior,
