@@ -125,6 +125,15 @@ function AdminDashboard() {
           <button onClick={handleCreate} style={styles.createBtn}>
             + New Assessment
           </button>
+          <button
+            onClick={() => navigate('/admin/payments')}
+            style={{
+              ...styles.createBtn,
+              backgroundColor: '#f59e0b',
+            }}
+          >
+            Manage Payments
+          </button>
           <button onClick={logout} style={styles.logoutBtn}>
             Log Out
           </button>

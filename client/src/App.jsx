@@ -23,7 +23,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import AssessmentManager from './pages/AssessmentManager';
-
+import AdminPayments from './pages/AdminPayments';
 
 function App() {
   return (
@@ -63,6 +63,15 @@ function App() {
             element={
               <AdminRoute>
                 <AssessmentManager />
+              </AdminRoute>
+            }
+          />
+
+          <Route
+            path="/admin/payments"
+            element={
+              <AdminRoute>
+                <AdminPayments />
               </AdminRoute>
             }
           />
