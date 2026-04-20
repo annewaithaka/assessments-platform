@@ -26,7 +26,7 @@ import AssessmentManager from './pages/AssessmentManager';
 import AdminPayments from './pages/AdminPayments';
 import TakeAssessment from './pages/TakeAssessment';
 import Results from './pages/Results';
-
+import Certificate from './pages/Certificate';
 
 function App() {
   return (
@@ -64,6 +64,15 @@ function App() {
             element={
               <ProtectedRoute>
                 <Results />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/certificate/:attemptId"
+            element={
+              <ProtectedRoute>
+                <Certificate />
               </ProtectedRoute>
             }
           />

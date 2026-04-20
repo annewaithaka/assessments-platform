@@ -72,6 +72,9 @@ def create_app():
     from app.routes.attempts import attempts_bp
     app.register_blueprint(attempts_bp)
 
+    from app.routes.certificates import certificates_bp
+    app.register_blueprint(certificates_bp)
+
     @app.route('/api/hello')
     def hello():
         return {'message': 'Hello from Flask! Your backend is running.'}
