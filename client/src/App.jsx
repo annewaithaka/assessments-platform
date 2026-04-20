@@ -24,6 +24,9 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import AssessmentManager from './pages/AssessmentManager';
 import AdminPayments from './pages/AdminPayments';
+import TakeAssessment from './pages/TakeAssessment';
+import Results from './pages/Results';
+
 
 function App() {
   return (
@@ -44,6 +47,23 @@ function App() {
             element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/assessment/:id/take"
+            element={
+              <ProtectedRoute>
+                <TakeAssessment />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/results/:attemptId"
+            element={
+              <ProtectedRoute>
+                <Results />
               </ProtectedRoute>
             }
           />
