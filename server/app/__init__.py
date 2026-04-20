@@ -66,6 +66,9 @@ def create_app():
     from app.routes.questions import questions_bp
     app.register_blueprint(questions_bp)
 
+    from app.routes.payments import payments_bp
+    app.register_blueprint(payments_bp)
+
     @app.route('/api/hello')
     def hello():
         return {'message': 'Hello from Flask! Your backend is running.'}
