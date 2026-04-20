@@ -22,6 +22,8 @@ import Dashboard from './pages/Dashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import AssessmentManager from './pages/AssessmentManager';
+
 
 function App() {
   return (
@@ -52,6 +54,15 @@ function App() {
             element={
               <AdminRoute>
                 <AdminDashboard />
+              </AdminRoute>
+            }
+          />
+
+          <Route
+            path="/admin/assessments/:id"
+            element={
+              <AdminRoute>
+                <AssessmentManager />
               </AdminRoute>
             }
           />
