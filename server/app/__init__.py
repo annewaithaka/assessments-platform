@@ -48,7 +48,7 @@ def create_app():
         app,
         resources={r"/api/*": {"origins": [
             "http://localhost:5173",  # local dev (Vite)
-            "https://assessments-platform-plum.vercel.app"
+            "https://cognos-assessment-platform-plum.vercel.app"
         ]}},
         supports_credentials=True)  # Allows React (port 5173) to call Flask (port 5000)
     jwt.init_app(app)
