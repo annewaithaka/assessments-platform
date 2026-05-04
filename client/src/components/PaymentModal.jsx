@@ -58,7 +58,7 @@ function PaymentModal({ assessment, onClose, onSuccess }) {
 
         <div style={styles.instructions}>
           <h4 style={styles.instructionsTitle}>How to pay:</h4>
-          <p style={styles.step}>1. Send <strong>KES {assessment.price.toLocaleString()}</strong> via M-Pesa to: <strong>0712345678</strong></p>
+          <p style={styles.step}>1. Send <strong>KES {assessment.price.toLocaleString()}</strong> via M-Pesa to: <strong>0798920710</strong></p>
           <p style={styles.step}>2. You will receive a confirmation SMS with a transaction code</p>
           <p style={styles.step}>3. Enter the transaction code below and submit</p>
           <p style={styles.step}>4. Your payment will be verified by our admin team</p>
