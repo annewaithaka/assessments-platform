@@ -16,7 +16,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api',  // Your Flask server
+  baseURL: 'https://assessments-platform.onrender.com/api',  // Your Flask server
   headers: {
     'Content-Type': 'application/json',
   },
