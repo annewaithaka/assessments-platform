@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_mail import Mail
-
+from flask_migrate import Migrate
 
 # ---------------------------------------------------------------
 # Why are these created OUTSIDE the factory function?
@@ -22,7 +22,7 @@ db = SQLAlchemy()
 cors = CORS()
 jwt = JWTManager()
 mail = Mail()
-
+migrate = Migrate()
 
 def create_app():
     """
@@ -42,6 +42,7 @@ def create_app():
     
     # Initialize extensions with this app
     db.init_app(app)
+    migrate.init_app(app, db)
     cors.init_app(app)  # Allows React (port 5173) to call Flask (port 5000)
     jwt.init_app(app)
     mail.init_app(app)
@@ -105,7 +106,7 @@ def create_app():
     # Import models so SQLAlchemy knows about them before creating tables
     from app.models import User, Assessment, Question, Payment, Attempt, Answer
 
-    with app.app_context():
-        db.create_all()
+    #with app.app_context():
+    #    db.create_all()
     
     return app

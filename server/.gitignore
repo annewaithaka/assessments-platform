@@ -14,3 +14,7 @@ __pycache__/
 # IDE
 .vscode/
 .idea/
+
+# files
+seed.py
+server/seed.py
